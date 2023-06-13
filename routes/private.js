@@ -21,8 +21,8 @@ module.exports = [
   },
   {
     path: `${version}/space/:id`,
-    controllers: require("../controllers/Space").getSpaceDetail,
-    method: "get",
+    controllers: require("../controllers/Space").editSpace,
+    method: "put",
     cache: false,
   },
 ];

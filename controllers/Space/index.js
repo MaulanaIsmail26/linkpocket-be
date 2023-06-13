@@ -51,7 +51,7 @@ module.exports = {
           .create({
             ...{
               ...requestBody,
-              slug: `${decoded?.fullname}-${uuid}`,
+              slug: `${decoded?.fullname?.split(" ").join("-")}-${uuid}`,
               photo_profile: result.url,
             },
             createdBy: decoded.id,
@@ -77,6 +77,61 @@ module.exports = {
         res.status(400).json({
           status: "ERROR",
           messages: error.message || "Upload error",
+          data: null,
+        })
+      );
+  },
+  editSpace: async (req, res) => {
+    const requestBody = req.body;
+    const authorization = req.headers.authorization.slice(6).trim();
+    const decoded = jwt.verify(authorization, process.env.APP_SECRET_KEY);
+
+    if (!decoded || !decoded.id) {
+      res.status(401).json({
+        status: "ERROR",
+        messages: "Invalid token",
+        data: null,
+      });
+    }
+
+    const check = await model.space.findOne({
+      where: { slug: req.params.id },
+    });
+
+    if (!check) {
+      res.status(400).json({
+        status: "ERROR",
+        messages: "Data not found",
+        data: null,
+      });
+    }
+
+    model.space
+      .update(
+        {
+          title: requestBody?.title ?? check?.dataValues?.title,
+          desc: requestBody?.desc ?? check?.dataValues?.desc,
+          background: requestBody?.background ?? check?.dataValues?.background,
+          photo_profile: check?.dataValues?.photo_profile,
+          social_media:
+            requestBody?.social_media ?? check?.dataValues?.social_media,
+          link: requestBody?.link ?? check?.dataValues?.link,
+          createdBy: check?.dataValues?.createdBy,
+          slug: check?.dataValues?.slug,
+        },
+        { where: { slug: req.params.id, createdBy: decoded.id } }
+      )
+      .then(() => {
+        res.status(200).json({
+          status: "OK",
+          messages: "update success",
+          data: null,
+        });
+      })
+      .catch((error) =>
+        res.status(400).json({
+          status: "ERROR",
+          messages: error.message || "Something wrong",
           data: null,
         })
       );
@@ -115,17 +170,6 @@ module.exports = {
       );
   },
   getSpaceDetail: (req, res) => {
-    const authorization = req.headers.authorization.slice(6).trim();
-    const decoded = jwt.verify(authorization, process.env.APP_SECRET_KEY);
-
-    if (!decoded || !decoded.id) {
-      res.status(401).json({
-        status: "ERROR",
-        messages: "Invalid token",
-        data: null,
-      });
-    }
-
     model.space
       .findOne({
         where: { slug: req.params.id },

@@ -19,4 +19,10 @@ module.exports = [
     controllers: require("../controllers/Auth").logout,
     method: "get",
   },
+  {
+    path: `${version}/space/:id`,
+    controllers: require("../controllers/Space").getSpaceDetail,
+    method: "get",
+    cache: false,
+  },
 ];
