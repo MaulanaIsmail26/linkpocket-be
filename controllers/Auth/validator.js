@@ -5,6 +5,7 @@ module.exports = {
   },
   registerValidator: {
     email: "required|email",
+    fullname: "required",
     password: "required",
   },
 };

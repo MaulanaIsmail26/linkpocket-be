@@ -27,6 +27,9 @@ module.exports = {
       link: {
         type: Sequelize.TEXT,
       },
+      slug: {
+        type: Sequelize.TEXT,
+      },
       createdBy: {
         type: Sequelize.INTEGER,
       },
