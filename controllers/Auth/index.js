@@ -34,9 +34,17 @@ module.exports = {
           .then((status) => {
             if (!status[0]) throw new Error("Something wrong");
 
-            const token = jwt.sign({...req.body, id: result.dataValues.id}, process.env.APP_SECRET_KEY, {
-              expiresIn: "24h",
-            });
+            const token = jwt.sign(
+              {
+                ...req.body,
+                id: result.dataValues.id,
+                fullname: result.dataValues.fullname,
+              },
+              process.env.APP_SECRET_KEY,
+              {
+                expiresIn: "24h",
+              }
+            );
 
             res.json({
               status: "OK",

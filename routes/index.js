@@ -11,13 +11,13 @@ var mainValidator = require("../middlewares/mainValidator");
 // Loop all private routes
 var private_get = private.filter((res) => res.method === "get");
 var private_post = private.filter((res) => res.method === "post");
-var private_patch = private.filter((res) => res.method === "patch");
+var private_put = private.filter((res) => res.method === "put");
 var private_deletes = private.filter((res) => res.method === "delete");
 
 // Loop all public routes
 var public_get = public.filter((res) => res.method === "get");
 var public_post = public.filter((res) => res.method === "post");
-var public_patch = public.filter((res) => res.method === "patch");
+var public_put = public.filter((res) => res.method === "put");
 var public_deletes = public.filter((res) => res.method === "delete");
 
 // render all private routes
@@ -43,8 +43,8 @@ private_post.map((result) =>
     result.controllers
   )
 );
-private_patch.map((result) =>
-  router.patch(
+private_put.map((result) =>
+  router.put(
     result.path,
     privateToken,
     function (req, res, next) {
@@ -94,8 +94,8 @@ public_post.map((result) =>
     result.controllers
   )
 );
-public_patch.map((result) =>
-  router.patch(
+public_put.map((result) =>
+  router.put(
     result.path,
     function (req, res, next) {
       mainValidator(req, res, next, result);

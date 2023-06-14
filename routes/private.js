@@ -15,8 +15,14 @@ module.exports = [
   },
   {
     path: `${version}/space`,
-    controllers: require("../controllers/Space").getSpaceDetail,
+    controllers: require("../controllers/Space").getSpaceList,
     method: "get",
+    cache: false,
+  },
+  {
+    path: `${version}/space/:id`,
+    controllers: require("../controllers/Space").editSpace,
+    method: "put",
     cache: false,
   },
 ];
